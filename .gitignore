@@ -3,6 +3,12 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+
+src/predict.py
+src/train.py
+predict.py
+train.py
+preprocess.py
 # C extensions
 *.so
 
