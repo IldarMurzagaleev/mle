@@ -39,8 +39,8 @@ class DataMaker():
 
     def get_data(self) -> bool:
         dataset = pd.read_csv(self.data_path)
-        X = pd.DataFrame(dataset.iloc[:, 1:5].values)
-        y = pd.DataFrame(dataset.iloc[:, 5:].values)
+        X = pd.DataFrame(dataset.iloc[:, 1:2].values, columns=['text'])
+        y = pd.DataFrame(dataset.iloc[:, 2:].values, columns=['label'])
         X.to_csv(self.X_path, index=True)
         y.to_csv(self.y_path, index=True)
         if os.path.isfile(self.X_path) and os.path.isfile(self.y_path):
@@ -61,7 +61,7 @@ class DataMaker():
             self.log.error(traceback.format_exc())
             sys.exit(1)
         X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=test_size, random_state=0)
+            X, y, test_size=test_size, random_state=0, stratify=y)
         self.save_splitted_data(X_train, self.train_path[0])
         self.save_splitted_data(y_train, self.train_path[1])
         self.save_splitted_data(X_test, self.test_path[0])
