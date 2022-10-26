@@ -1,0 +1,10 @@
+model: RAND_FOREST
+model params:
+  n_estimators: '200'
+  max_depth: '100'
+  criterion: gini
+  path: C:\Users\murza\Documents\MIPT+NN\MLE\Projects\mle\experiments\rand_forest.sav
+tests: func
+score: '1.0'
+X_test path: C:\Users\murza\Documents\MIPT+NN\MLE\Projects\mle\data\Test_BBC_X.csv
+y_test path: C:\Users\murza\Documents\MIPT+NN\MLE\Projects\mle\data\Test_BBC_y.csv
