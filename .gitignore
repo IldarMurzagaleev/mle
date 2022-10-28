@@ -3,12 +3,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-
-src/predict.py
-src/train.py
-predict.py
-train.py
-preprocess.py
 # C extensions
 *.so
 
@@ -133,3 +127,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Place data for non local DVC
+/data 
