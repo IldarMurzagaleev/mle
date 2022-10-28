@@ -104,9 +104,13 @@ class MultiModel():
         self.log.info(f'{path} is saved')
         return os.path.isfile(path)
 
-if __name__ == "__main__":
+def main_block():
     multi_model = MultiModel()
-    print(multi_model.X_train.shape)
     multi_model.log_reg(predict=True)
     multi_model.rand_forest(predict=True)
     multi_model.multi_nb(predict=True)
+    return True
+
+
+if __name__ == "__main__":
+    main_block()
