@@ -29,13 +29,6 @@ class DataMaker():
             self.project_path, "Test_BBC_y.csv")]
 
         self.log.info("DataMaker is ready")
-    
-    def get_splitted_data(self) -> set:
-        """
-        Function to get ready splitted data for competitions
-        Where train data have labels and test data no have labels
-        """
-        pass
 
     def get_data(self) -> bool:
         dataset = pd.read_csv(self.data_path)

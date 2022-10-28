@@ -6,7 +6,7 @@ import sys
 
 sys.path.insert(1, os.path.join(os.getcwd(), "src"))
 
-from train import MultiModel
+from train import MultiModel, main_block
 
 config = configparser.ConfigParser()
 config.read("config.ini")
@@ -22,9 +22,15 @@ class TestMultiModel(unittest.TestCase):
 
     def test_rand_forest(self):
         self.assertEqual(self.multi_model.rand_forest(), True)
+    
+    def test_rand_forest_config(self):
+        self.assertEqual(self.multi_model.rand_forest(use_config=True), True)
 
     def test_multi_nb(self):
         self.assertEqual(self.multi_model.multi_nb(), True)
+    
+    def test_main_block(self):
+        self.assertEqual(main_block(), True)
 
 
 if __name__ == "__main__":
