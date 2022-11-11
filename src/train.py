@@ -104,6 +104,7 @@ class MultiModel():
         self.log.info(f'{path} is saved')
         return os.path.isfile(path)
 
+
 def main_block():
     multi_model = MultiModel()
     multi_model.log_reg(predict=True)
