@@ -42,15 +42,15 @@ options {
             steps {
                 script {
                     try {
-                       bat encoding: 'CP1251', script: '''chcp 1251
-                                                          cd mle && docker-compose build'''
+                       bat encoding: 'UTF-8', script: '''chcp 65001
+                                                         cd mle && docker-compose build'''
                         }
 
                     finally {
-                    bat encoding: 'CP1251', script: '''chcp 1251
-                                                       cd mle
-                                                       docker-compose up -d
-                                                    '''
+                        bat encoding: 'UTF-8', script: '''chcp 65001
+                                                          cd mle
+                                                          docker-compose up -d
+                                                        '''
                         }
 				    }
                 }
@@ -69,11 +69,11 @@ options {
                                                            for /f %%i in ('docker ps -qf "name=^mle-web-1"') do set containerId=%%i
                                                            echo %containerId%
                                                            IF "%containerId%" == "" (
-                                                            echo "No container running"
+                                                               echo "No container running"
                                                             )
                                                            ELSE (
-                                                            docker logs --tail 1000 -f %containerId%
-                                                            )
+                                                                docker logs --tail 1000 -f %containerId%
+                                                                )
                                                         '''
                     }
             }
@@ -91,16 +91,16 @@ options {
 
         stage('Push'){
             steps{
-                bat encoding: 'CP1251', script: '''chcp 1251
-                                                   docker push kadgar/mle:latest'''
+                bat encoding: 'UTF-8', script: '''chcp 65001
+                                                  docker push kadgar/mle:latest'''
             }
         }
 	}
 
     post {
         always {
-            bat encoding: 'CP1251', script: '''chcp 1251
-                                               docker logout'''
+            bat encoding: 'UTF-8', script: '''chcp 65001
+                                              docker logout'''
         }
     }
 }
