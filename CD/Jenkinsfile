@@ -19,30 +19,32 @@ options {
                 //withCredentials([usernamePassword(credentialsId: 'mle', passwordVariable: 'DOCKER_REGISTRY_PWD', usernameVariable: 'DOCKER_REGISTRY_USER')]){
                 //bat 'chcp 65001 && echo %DOCKER_REGISTRY_PWD% | docker login -u %DOCKER_REGISTRY_USER% --password-stdin'}
                 //bat 'chcp 65001 && echo %DOCKERHUB_CREDS_PSW% | docker login -u %DOCKERHUB_CREDS_USR% --password-stdin'
-                bat 'docker login -u %DOCKERHUB_CREDS_USR% -p %DOCKERHUB_CREDS_PSW%'
+                bat encoding: 'CP1251', script: '''chcp 1251
+                                                   docker login -u %DOCKERHUB_CREDS_USR% -p %DOCKERHUB_CREDS_PSW%'''
                 }
             }
 
         stage('Pull image'){
             steps{
-                bat '''
-                        docker pull kadgar/mle:latest
-                '''
+                bat encoding: 'CP1251', script: '''chcp 1251
+                                                   docker pull kadgar/mle:latest
+                                                '''
             }
         }
 
         stage('Run container'){
             steps{
-                bat '''
-                        docker run --name mle -p 80:5556 -d kadgar/mle:latest
-                '''
+                bat encoding: 'CP1251', script: '''chcp 1251
+                                                   docker run --name mle -p 80:5556 -d kadgar/mle:latest
+                                                '''
             }
         }
 	}
 
     post {
         always {
-            bat 'docker stop mle-template && docker logout'
+            bat encoding: 'CP1251', script: '''chcp 1251
+                                               docker stop mle-template && docker logout'''
         }
     }
 }
