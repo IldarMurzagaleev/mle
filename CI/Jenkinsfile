@@ -16,13 +16,15 @@ options {
         stage('Clone github repository') {
             steps {
                 cleanWs()
-                bat 'chcp 65001 && git clone -b main https://github.com/IldarMurzagaleev/mle.git'
+                bat encoding: 'CP1251', script: '''chcp 1251
+                                                   git clone -b main https://github.com/IldarMurzagaleev/mle.git'''
 				}
 			}
 
         stage('Checkout repo dir') {
             steps {
-                bat 'chcp 65001 && cd mle && dir'
+                bat encoding: 'CP1251', script: '''chcp 1251
+                                                   cd mle && dir'''
 				}
 			}
 
@@ -31,7 +33,8 @@ options {
                 //withCredentials([usernamePassword(credentialsId: 'mle', passwordVariable: 'DOCKER_REGISTRY_PWD', usernameVariable: 'DOCKER_REGISTRY_USER')]){
                 //bat 'chcp 65001 && echo %DOCKER_REGISTRY_PWD% | docker login -u %DOCKER_REGISTRY_USER% --password-stdin'}
                 //bat 'chcp 65001 && echo %DOCKERHUB_CREDS_PSW% | docker login -u %DOCKERHUB_CREDS_USR% --password-stdin'
-                bat 'chcp 65001 && docker login -u %DOCKERHUB_CREDS_USR% -p %DOCKERHUB_CREDS_PSW%'
+                bat encoding: 'CP1251', script: '''chcp 1251
+                                                   docker login -u %DOCKERHUB_CREDS_USR% -p %DOCKERHUB_CREDS_PSW%'''
                 }
             }
 
@@ -39,15 +42,15 @@ options {
             steps {
                 script {
                     try {
-                        bat 'chcp 65001 && cd mle && docker-compose build'
+                       bat encoding: 'CP1251', script: '''chcp 1251
+                                                          cd mle && docker-compose build'''
                         }
 
                     finally {
-                    bat '''
-                        chcp 65001
-                        cd mle
-                        docker-compose up -d
-                        '''
+                    bat encoding: 'CP1251', script: '''chcp 1251
+                                                       cd mle
+                                                       docker-compose up -d
+                                                    '''
                         }
 				    }
                 }
@@ -88,7 +91,8 @@ options {
 
         stage('Push'){
             steps{
-                bat 'chcp 65001 && docker push kadgar/mle:latest'
+                bat encoding: 'CP1251', script: '''chcp 1251
+                                                   docker push kadgar/mle:latest'''
             }
         }
 	}
