@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 import sys
 import traceback
 
-from logger import Logger
+from src.logger import Logger
 
 TEST_SIZE = 0.2
 SHOW_LOG = True

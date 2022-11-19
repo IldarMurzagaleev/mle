@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8"/>
+    <title>Form</title>
+    <link rel="stylesheet" type="text/css" href="static/style.css"/>
+  </head>
+  <body>
+    <h2>Predict class of text</h2>
+    <script type="text/javascript" src="static/script.js"></script>
+    <form action="http://localhost:5000/", method="POST", enctype="multipart/form-data">
+        <label for="model">Model</label>
+        <select class="form-control" name="model" id="model">
+            <option value="LOG_REG" selected="true">logistic regression</option>
+            <option value="RAND_FOREST" >random forest</option>
+            <option value="MULTI_NB">multinomial naive bayes</option>
+        </select>
+        <br>
+
+        <input type="submit" value="Submit" id="submit_button">
+        
+     </form>
+    
+  </body>
+</html>
