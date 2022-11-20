@@ -72,7 +72,7 @@ options {
                                                                echo "No container running"
                                                             )
                                                            ELSE (
-                                                                docker logs --tail 1000 -f %containerId%
+                                                                docker logs --tail 1000 %containerId%
                                                                 )
                                                         '''
                     }
@@ -83,7 +83,7 @@ options {
             steps{
                 dir("mle"){
                     bat encoding: 'CP1251', script: '''chcp 1251
-                                                       docker-compose logs -t --tail 10
+                                                       docker-compose logs --tail 10
                                                     '''
                 }
             }
