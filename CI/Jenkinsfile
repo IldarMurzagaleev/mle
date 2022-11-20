@@ -69,7 +69,7 @@ options {
                                                            for /f %%i in ('docker ps -qf "name=^mle"') do set containerId=%%i                                                            echo %containerId%
                                                            IF "%containerId%" == "" (echo "No container running!!!")
                                                            ELSE (
-                                                                docker logs --tail 1000 -f %containerId%
+                                                                docker logs --tail 1000 %containerId%
                                                                 )
                                                         '''
                     }
@@ -80,7 +80,7 @@ options {
             steps{
                 dir("mle"){
                     bat encoding: 'UTF-8',  script: '''chcp 65001
-                                                       docker-compose logs -t --tail 10
+                                                       docker-compose logs --tail 10
                                                     '''
                 }
             }
