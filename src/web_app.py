@@ -1,3 +1,9 @@
+from flask import Flask, render_template, request, jsonify
+import subprocess
+from src import predict
+from src import utils
+
+
 import argparse
 import configparser
 from datetime import datetime
@@ -8,41 +14,37 @@ import pickle
 import shutil
 import sys
 import time
-import traceback
 import yaml
-from src.logger import Logger
-
-from src import utils
-
-SHOW_LOG = True
+import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 
-class Predictor():
+
+def vectorize(X_train: pd.DataFrame, X_test: pd.DataFrame, y_train: pd.DataFrame, y_test: pd.DataFrame) -> tuple:
+    tfidf = TfidfVectorizer(sublinear_tf=True, min_df=5, norm='l2', encoding='latin-1', ngram_range=(1, 2), stop_words='english')
+    y_train['label_id'] = y_train['label'].factorize()[0]
+    y_test['label_id'] = y_test['label'].factorize()[0]
+
+    label_id_df = y_train[['label', 'label_id']].drop_duplicates().sort_values('label_id')
+    label_to_id = dict(label_id_df.values)
+    id_to_label = dict(label_id_df[['label_id', 'label']].values)
+
+    features = tfidf.fit_transform(X_train.text).toarray() # Remaps the words in the train articles in the text column of 
+                                                           # data frame into features (superset of words) with an importance assigned 
+                                                           # based on each words frequency in the document and across documents
+    labels = y_train.label_id                              # represents the category of each of the all train articles
+    test_labels = y_test.label_id
+    test_features = tfidf.transform(X_test.text.tolist())
+    return (tfidf, features, test_features, labels, test_labels, label_to_id, id_to_label)
+
+class WebPredictor():
 
     def __init__(self) -> None:
-        logger = Logger(SHOW_LOG)
+        
         self.config = configparser.ConfigParser()
-        self.log = logger.get_logger(__name__)
         self.config.read("config.ini")
         self.parser = argparse.ArgumentParser(description="Predictor")
-        self.parser.add_argument("-m",
-                                 "--model",
-                                 type=str,
-                                 help="Select model",
-                                 required=True,
-                                 default="LOG_REG",
-                                 const="LOG_REG",
-                                 nargs="?",
-                                 choices=["LOG_REG", "RAND_FOREST", "MULTI_NB"])
-        self.parser.add_argument("-t",
-                                 "--tests",
-                                 type=str,
-                                 help="Select tests",
-                                 required=True,
-                                 default="smoke",
-                                 const="smoke",
-                                 nargs="?",
-                                 choices=["smoke", "func"])
+        
         self.X_train = pd.read_csv(
             self.config["SPLIT_DATA"]["X_train"], index_col=0)
         self.y_train = pd.read_csv(
@@ -53,40 +55,23 @@ class Predictor():
             self.config["SPLIT_DATA"]["y_test"], index_col=0)
         
         self.vectorizer, self.X_train, self.X_test, self.y_train, self.y_test, self.label_to_id, self.id_to_label = \
-                                                                            utils.vectorize(self.X_train, 
+                                                                            vectorize(self.X_train, 
                                                                                       self.X_test, 
                                                                                       self.y_train, 
                                                                                       self.y_test)
-        self.log.info("Predictor is ready")
 
     def predict(self, pred_args=None) -> bool:
-        if pred_args is None:
-            args = self.parser.parse_args()
-            args_model = args.model
-            args_tests = args.tests
-        else:
-            args_model = pred_args['model']
-            args_tests = pred_args['tests']
+
+        args_model = pred_args['model']
+        args_tests = pred_args['tests']
         result = ''
         try:
             classifier = pickle.load(
                 open(self.config[args_model]["path"], "rb"))
         except FileNotFoundError:
-            self.log.error(traceback.format_exc())
             sys.exit(1)
-        if args_tests == "smoke":
-            try:
-                score = classifier.score(self.X_test, self.y_test)
-                print(f'{args_model} has {score} score')
-                result = f'{args_model} has {score} score'
-            except Exception:
-                self.log.error(traceback.format_exc())
-                sys.exit(1)
-            self.log.info(
-                f'{self.config[args_model]["path"]} passed smoke tests')
-            
-
-        elif args_tests == "func":
+        
+        if args_tests == "func":
             tests_path = os.path.join(os.getcwd(), "tests")
             exp_path = os.path.join(os.getcwd(), "experiments")
             for test in os.listdir(tests_path):
@@ -99,12 +84,9 @@ class Predictor():
                         
                         score = classifier.score(X, y)
                         print(f'{args_model} has {score} score')
-                        result += f'{args_model} has {score} score for {test} <br>'
+                        result += f'{args_model} has {score} score \n'
                     except Exception:
-                        self.log.error(traceback.format_exc())
                         sys.exit(1)
-                    self.log.info(
-                        f'{self.config[args_model]["path"]} passed func test {f.name}')
                     exp_data = {
                         "model": args_model,
                         "model params": dict(self.config.items(args_model)),
@@ -126,6 +108,31 @@ class Predictor():
         return True
 
 
-if __name__ == "__main__":
-    predictor = Predictor()
-    predictor.predict()
+app = Flask(__name__)
+
+cmd = 'python ' + os.path.join(os.getcwd(), "src/preprocess.py")
+p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+# cmd = 'python ' + os.path.join(os.getcwd(), "src/train.py")
+# p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+
+@app.route('/', methods= ["GET", "POST"])
+def hello_world():
+    if request.method == 'POST':
+        model = str(request.values.get('model'))
+    else:
+        model = "LOG_REG"
+    test = 'func'
+    pred_args = {'model': model, 'test': test}
+    # predictor = WebPredictor()
+    # message=predictor.predict(pred_args)
+    message = os.getcwd()
+    config = configparser.ConfigParser()
+    config.read("config.ini")
+    message += ' ' + config["SPLIT_DATA"]["X_train"]
+    message += ' ' + config["SPLIT_DATA"]["y_train"]
+    message += ' ' + config["SPLIT_DATA"]["y_test"]
+    message += ' ' + config["SPLIT_DATA"]["X_test"]
+    return message
+
+if __name__ == '__main__':
+    app.run(debug=True)

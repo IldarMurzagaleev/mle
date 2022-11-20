@@ -10,8 +10,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import sys
 import traceback
 
-from logger import Logger
-from utils import *
+from src.logger import Logger
+from src.utils import *
 
 SHOW_LOG = True
 

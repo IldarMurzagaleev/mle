@@ -1,0 +1,7 @@
+model: LOG_REG
+model params:
+  path: C:\Users\murza\Documents\MIPT+NN\MLE\Projects\mle\experiments\log_reg.sav
+tests: func
+score: '1.0'
+X_test path: C:\Users\murza\Documents\MIPT+NN\MLE\Projects\mle\data\Test_BBC_X.csv
+y_test path: C:\Users\murza\Documents\MIPT+NN\MLE\Projects\mle\data\Test_BBC_y.csv
