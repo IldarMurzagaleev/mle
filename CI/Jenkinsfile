@@ -64,7 +64,7 @@ options {
         stage('Checkout container logs') {
             steps {
                 dir("mle") {
-                        bat encoding: 'CP1251', script: '''chcp 1251
+                        bat encoding: 'UTF-8', script:  '''chcp 65001
                                                            docker-compose up -d
                                                            for /f %%i in ('docker ps -qf "name=^mle-web-1"') do set containerId=%%i
                                                            echo %containerId%
@@ -72,7 +72,7 @@ options {
                                                                echo "No container running"
                                                             )
                                                            ELSE (
-                                                                docker logs --tail 1000 %containerId%
+                                                                docker logs --tail 1000 -f %containerId%
                                                                 )
                                                         '''
                     }
@@ -82,8 +82,8 @@ options {
         stage('Checkout coverage report'){
             steps{
                 dir("mle"){
-                    bat encoding: 'CP1251', script: '''chcp 1251
-                                                       docker-compose logs --tail 10
+                    bat encoding: 'UTF-8',  script: '''chcp 65001
+                                                       docker-compose logs -t --tail 10
                                                     '''
                 }
             }
