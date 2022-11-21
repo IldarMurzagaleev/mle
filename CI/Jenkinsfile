@@ -68,13 +68,8 @@ options {
                                                            docker-compose up -d
                                                            for /f %%i in ('docker ps -qf "name=^mle"') do set containerId=%%i
                                                            echo %containerId%
-                                                           IF "%containerId%" == "" (
-                                                                echo "No container running"
-                                                                )
-                                                            ELSE (
-                                                                docker logs --tail 1000 -f %containerId%
-                                                            )
-                                                            '''
+                                                           IF "%containerId%" == "" (echo "No container running") ELSE (docker logs -t --tail 100 %containerId%)
+                                                           '''
                     }
             }
         }
@@ -92,6 +87,8 @@ options {
         stage('Push'){
             steps{
                 bat encoding: 'UTF-8', script: '''chcp 65001
+                                                  for /f %%i in ('docker image ls -qf "reference=mle*"') do set imageId=%%i
+                                                  docker tag %imageId% kadgar/mle:latest
                                                   docker push kadgar/mle:latest'''
             }
         }
