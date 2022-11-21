@@ -50,8 +50,6 @@ options {
                         bat encoding: 'UTF-8', script: '''chcp 65001
                                                           cd mle
                                                           docker-compose up -d
-                                                          for /f %%i in ('docker image ls -qf "name=^mle"') do set imageId=%%i
-                                                          docker tag %imageId% kadgar/mle:latest
                                                         '''
                         }
 				    }
@@ -89,6 +87,8 @@ options {
         stage('Push'){
             steps{
                 bat encoding: 'UTF-8', script: '''chcp 65001
+                                                  for /f %%i in ('docker image ls -qf "reference=mle*"') do set imageId=%%i
+                                                  docker tag %imageId% kadgar/mle:latest
                                                   docker push kadgar/mle:latest'''
             }
         }
