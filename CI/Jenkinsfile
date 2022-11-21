@@ -68,7 +68,7 @@ options {
                                                            docker-compose up -d
                                                            for /f %%i in ('docker ps -qf "name=^mle"') do set containerId=%%i
                                                            echo %containerId%
-                                                           IF "%containerId%" == "" (echo "No container running") ELSE (echo %containerId%)
+                                                           IF "%containerId%" == "" (echo "No container running") ELSE (docker logs --tail 10 -f %containerId%)
                                                            '''
                     }
             }
