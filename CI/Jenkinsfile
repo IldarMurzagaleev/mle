@@ -68,7 +68,7 @@ options {
                                                            docker-compose up -d
                                                            for /f %%i in ('docker ps -qf "name=^mle"') do set containerId=%%i
                                                            echo %containerId%
-                                                           docker tag %containerId% kadgar/mle:latest
+                                                           docker tag %containerId% kadgar/mle
                                                            IF "%containerId%" == "" (echo "No container running") ELSE (docker logs -t --tail 100 %containerId%)
                                                            '''
                     }
@@ -88,7 +88,7 @@ options {
         stage('Push'){
             steps{
                 bat encoding: 'UTF-8', script: '''chcp 65001
-                                                  docker push kadgar/mle:latest'''
+                                                  docker push kadgar/mle'''
             }
         }
 	}
