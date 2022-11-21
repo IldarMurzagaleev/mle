@@ -68,7 +68,7 @@ options {
                                                            docker-compose up -d
                                                            for /f %%i in ('docker ps -qf "name=^mle"') do set containerId=%%i
                                                            echo %containerId%
-                                                           docker tag %containerId% kadgar/mle
+                                                           docker tag docker mle:latest kadgar/mle:latest
                                                            IF "%containerId%" == "" (echo "No container running") ELSE (docker logs -t --tail 100 %containerId%)
                                                            '''
                     }
