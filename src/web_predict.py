@@ -12,7 +12,7 @@ cmd +=  'python ' + os.path.join(os.getcwd(), "src/train.py") + "; "
 cmd +=  'python ' + os.path.join(os.getcwd(), "src/predict.py") + " -m LOG_REG -t func ; "
 cmd += 'coverage run ' + os.path.join(os.getcwd(), "src/unit_tests/test_preprocess.py") + "; " 
 cmd += 'coverage run -a ' +  os.path.join(os.getcwd(), "src/unit_tests/test_training.py") + '; coverage report -m'
-p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+p = subprocess.Popen(['/bin/bash', '-c', cmd])
 
 
 @app.route('/', methods= ["GET", "POST"])
