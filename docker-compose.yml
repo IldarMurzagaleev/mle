@@ -3,7 +3,7 @@ services:
    mle:
        build: .
        image: mle
-       restart: unless-stopped
+       restart: no
        expose:
             - "5000"
        deploy:
