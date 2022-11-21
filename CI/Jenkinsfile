@@ -61,20 +61,25 @@ options {
         //use for single container (with auth):
         //docker run --name mle-template_web_1 cd app && coverage run src/unit_tests/test_preprocess.py && coverage run -a src/unit_tests/test_training.py && coverage report -m
 
-        stage('Checkout container logs') {
-            steps {
-                dir("mle") {
-                        bat encoding: 'CP1251', script: '''chcp 1251
-                                                           docker-compose up -d
-                                                           for /f %%i in ('docker ps -qf "name=^mle"') do set containerId=%%i
-                                                           echo %containerId%
-                                                           IF "%containerId%" == "" (echo "No container running") ELSE (docker logs --tail 1000 -f %containerId%)
-                                                           '''
-                    }
+
+
+        stage('Checkout coverage report'){
+            steps{
+                dir("mle"){
+                    bat encoding: 'CP1251', script: '''chcp 1251
+                                                       docker-compose logs -t --tail 10
+                                                    '''
+                }
             }
         }
 
-        
+        stage('Push'){
+            steps{
+                bat encoding: 'UTF-8', script: '''chcp 65001
+                                                  docker push kadgar/mle:latest'''
+            }
+        }
+	}
 
     post {
         always {
