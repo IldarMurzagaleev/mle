@@ -79,9 +79,6 @@ options {
                 dir("mle"){
                     bat encoding: 'CP1251', script: '''chcp 1251
                                                        docker-compose logs -t --tail 10
-                                                       for /f %%i in ('docker ps -qf "name=^nginx-"') do set containerId=%%i
-                                                       echo %containerId%
-                                                       docker stop %containerId%
                                                     '''
                 }
             }
