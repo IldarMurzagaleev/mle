@@ -7,12 +7,12 @@ from src.utils import vectorize
 
 app = Flask(__name__)
 
-cmd = 'python ' + os.path.join(os.getcwd(), "src/preprocess.py") + "; "
-cmd +=  'python ' + os.path.join(os.getcwd(), "src/train.py") + "; "
-cmd +=  'python ' + os.path.join(os.getcwd(), "src/predict.py") + " -m LOG_REG -t func ; "
-cmd += 'coverage run ' + os.path.join(os.getcwd(), "src/unit_tests/test_preprocess.py") + "; " 
-cmd += 'coverage run -a ' +  os.path.join(os.getcwd(), "src/unit_tests/test_training.py") + '; coverage report -m'
-p = subprocess.Popen(['/bin/bash', '-c', cmd])
+# cmd = 'python ' + os.path.join(os.getcwd(), "src/preprocess.py") + "; "
+# cmd +=  'python ' + os.path.join(os.getcwd(), "src/train.py") + "; "
+# cmd +=  'python ' + os.path.join(os.getcwd(), "src/predict.py") + " -m LOG_REG -t func; "
+# cmd += 'coverage run ' + os.path.join(os.getcwd(), "src/unit_tests/test_preprocess.py") + "; " 
+# cmd += 'coverage run -a ' +  os.path.join(os.getcwd(), "src/unit_tests/test_training.py") + '; coverage report -m'
+# p = subprocess.Popen(['/bin/bash', '-c', cmd])
 
 
 @app.route('/', methods= ["GET", "POST"])
