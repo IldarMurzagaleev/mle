@@ -68,21 +68,12 @@ options {
                                                            docker-compose up -d
                                                            for /f %%i in ('docker ps -qf "name=^mle"') do set containerId=%%i
                                                            echo %containerId%
-                                                           IF "%containerId%" == "" (echo "No container running") ELSE (docker logs --tail 1000 -f %containerId%)
+                                                           IF "%containerId%" == "" (echo "No container running") ELSE (docker logs --tail 1000 -f %containerId% && docker-compose logs -t --tail 10 && docker stop %containerId%)
                                                            '''
                     }
             }
         }
 
-        stage('Checkout coverage report'){
-            steps{
-                dir("mle"){
-                    bat encoding: 'CP1251', script: '''chcp 1251
-                                                       docker-compose logs -t --tail 10
-                                                    '''
-                }
-            }
-        }
 
         stage('Push'){
             steps{
