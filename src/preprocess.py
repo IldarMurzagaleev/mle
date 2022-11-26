@@ -12,8 +12,13 @@ SHOW_LOG = True
 
 
 class DataMaker():
-
+    """
+     Class to implement data preprocessing stage 
+    """
     def __init__(self) -> None:
+        """
+        __init__ method which sets preprocessing parameters
+        """
         logger = Logger(SHOW_LOG)
         self.config = configparser.ConfigParser()
         self.log = logger.get_logger(__name__)
@@ -31,6 +36,14 @@ class DataMaker():
         self.log.info("DataMaker is ready")
 
     def get_data(self) -> bool:
+        """
+        Class method which read data from csv files and set config parameters
+
+        Args:
+
+        Returns:
+            boolean execution success flag
+        """
         dataset = pd.read_csv(self.data_path)
         X = pd.DataFrame(dataset.iloc[:, 1:2].values, columns=['text'])
         y = pd.DataFrame(dataset.iloc[:, 2:].values, columns=['label'])
@@ -46,6 +59,16 @@ class DataMaker():
             return False
 
     def split_data(self, test_size=TEST_SIZE) -> bool:
+        """
+        Class method which split dataframe and save files with it
+
+        Args:
+            test_size (float): should be between 0.0 and 1.0 and represent 
+                the proportion of the dataset to include in the test split
+
+        Returns:
+            boolean execution success flag
+        """
         self.get_data()
         try:
             X = pd.read_csv(self.X_path, index_col=0)
@@ -72,6 +95,16 @@ class DataMaker():
             os.path.isfile(self.test_path[1])
 
     def save_splitted_data(self, df: pd.DataFrame, path: str) -> bool:
+        """
+        Class method which save files with splitted dataframe
+
+        Args:
+            df (pd.DataFrame): splitted dataframe
+            path (str): path for saving file with splitted data
+
+        Returns:
+            boolean execution success flag
+        """
         df = df.reset_index(drop=True)
         df.to_csv(path, index=True)
         self.log.info(f'{path} is saved')

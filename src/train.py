@@ -17,7 +17,14 @@ SHOW_LOG = True
 
 
 class MultiModel():
+    """
+     Class to implement training and saving different models
+    """ 
     def __init__(self) -> None:
+        """
+        __init__ method which sets training process parameters and 
+        carries out the preprocessing process with vectorizer
+        """
         logger = Logger(SHOW_LOG)
         self.config = configparser.ConfigParser()
         self.log = logger.get_logger(__name__)
@@ -43,6 +50,15 @@ class MultiModel():
         self.log.info("MultiModel is ready")
     
     def log_reg(self, predict=False) -> bool:
+        """
+        Class method which train and save logistic regression model
+
+        Args:
+            predict (bool): boolean train / predict mode flag (True if training mode) 
+
+        Returns:
+            boolean execution success flag
+        """
         classifier = LogisticRegression()
         try:
             classifier.fit(self.X_train, self.y_train)
@@ -56,6 +72,15 @@ class MultiModel():
         return self.save_model(classifier, self.log_reg_path, "LOG_REG", params)
     
     def multi_nb(self, predict=False) -> bool:
+        """
+        Class method which train and save multinomial bayes model
+
+        Args:
+            predict (bool): boolean train / predict mode flag (True if training mode) 
+
+        Returns:
+            boolean execution success flag
+        """
         classifier = MultinomialNB()
         try:
             classifier.fit(self.X_train, self.y_train)
@@ -69,6 +94,20 @@ class MultiModel():
         return self.save_model(classifier, self.multi_nb_path, "MULTI_NB", params)
     
     def rand_forest(self, use_config=False, n_trees=200, max_depth=100, criterion="gini", predict=False) -> bool:
+        """
+        Class method which train and save random forest model
+
+        Args:
+            use_config (bool): boolean using config file flag (True if use config file)
+            predict (bool): boolean train / predict mode flag (True if training mode)
+            n_trees (int): number of trees in model (default 200)
+            max_depth (int): the maximum depth of the tree
+            criterion {“gini”, “entropy”, “log_loss”}: the function to measure the quality of a split (default=”gini”)
+
+
+        Returns:
+            boolean execution success flag
+        """
         if use_config:
             try:
                 classifier = RandomForestClassifier(
@@ -95,6 +134,18 @@ class MultiModel():
         return self.save_model(classifier, self.rand_forest_path, "RAND_FOREST", params)
 
     def save_model(self, classifier, path: str, name: str, params: dict) -> bool:
+        """
+        Class method which save file with trained model
+
+        Args:
+            classifier: trained model
+            path (str): path for saving file with model
+            name (str): model name for config file
+            params (dict): model parameter 
+
+        Returns:
+            boolean execution success flag
+        """
         self.config[name] = params
         os.remove('config.ini')
         with open('config.ini', 'w') as configfile:
@@ -106,6 +157,14 @@ class MultiModel():
 
 
 def main_block():
+    """
+    Class method which execute all models training
+
+    Args:
+
+    Returns:
+    boolean execution success flag
+    """
     multi_model = MultiModel()
     multi_model.log_reg(predict=True)
     multi_model.rand_forest(predict=True)

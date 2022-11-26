@@ -14,7 +14,7 @@ class Logger:
 
     def __init__(self, show: bool) -> None:
         """
-            Re-defined __init__ method which sets show parametr
+        Re-defined __init__ method which sets show parametr
 
         Args:
             show (bool): if set all logs will be shown in terminal

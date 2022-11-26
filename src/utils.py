@@ -2,6 +2,20 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 def vectorize(X_train: pd.DataFrame, X_test: pd.DataFrame, y_train: pd.DataFrame, y_test: pd.DataFrame) -> tuple:
+    """
+        Method for vectorizing text in preprocessing stage
+        
+        Args:
+            X_train (pd.DataFrame): train dataset with text examples
+            X_test (pd.DataFrame): test dataset with text examples and labels
+            y_train (pd.DataFrame): labels for train dataset with text examples
+            y_test (pd.DataFrame): labels for test dataset with text examples
+
+        Returns:
+            tuple with trained vectorizer, vectorized train and test text, 
+            encoded labels and dictionaries for converting labels 
+            to identifiers and vice versa 
+    """
     tfidf = TfidfVectorizer(sublinear_tf=True, min_df=5, norm='l2', encoding='latin-1', ngram_range=(1, 2), stop_words='english')
     y_train['label_id'] = y_train['label'].factorize()[0]
     y_test['label_id'] = y_test['label'].factorize()[0]

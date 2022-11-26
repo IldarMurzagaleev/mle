@@ -18,8 +18,14 @@ SHOW_LOG = True
 
 
 class Predictor():
-
+    """
+     Class to implement prediction of different models
+    """
     def __init__(self) -> None:
+        """
+        __init__ method which sets prediction process parameters and 
+        carries out the preprocessing process with vectorizer
+        """
         logger = Logger(SHOW_LOG)
         self.config = configparser.ConfigParser()
         self.log = logger.get_logger(__name__)
@@ -60,6 +66,17 @@ class Predictor():
         self.log.info("Predictor is ready")
 
     def predict(self, pred_args=None) -> bool:
+        """
+        Class method that implements text label prediction with selected model and parameters
+
+        Args:
+            pred_args (dict):  dictionary with model parameters when called from a web application 
+            (rather than the command line) (default None)
+
+        Returns:
+            boolean execution success flag in case calling from command line or 
+            text result of prediction 
+        """
         if pred_args is None:
             args = self.parser.parse_args()
             args_model = args.model
